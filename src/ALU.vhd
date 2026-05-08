@@ -52,7 +52,7 @@ component ripple_adder is
         end component ripple_adder;
         
         
-        signal w_carryi, w_carryosub, w_carryoadd: std_logic; 
+        signal w_carryi, w_carryosub, w_carryoadd, w_overflow: std_logic; 
         signal w_flags : std_logic_vector(3 downto 0);
         signal w_reg1, w_reg2, w_inverse_reg2, w_addres, w_subres, w_andres, w_orres, w_result: std_logic_vector(7 downto 0);
        
@@ -91,15 +91,16 @@ begin
                    w_andres when "010",
                    w_orres  when "011",        
                   "00000000" when others;
-  
         
+      --with i_op select
+        --w_overflow <= ((not w_result(7)) and w_reg1(7) and w_reg2(7)) or (w_result(7) and (not w_reg1(7)) and (not w_reg2(7))) when "000",
                    
         o_result <= w_result;
       
         o_flags(3) <= '1' when w_result(7) = '1' else '0';
         O_flags(2) <= '1' when w_result = "00000000" else '0';
-        o_flags(1) <= '1' when (((w_carryoadd = '1' and i_op = "000") or (not (w_carryosub) = '1' and i_op = "001")) or w_result = "00000111") or w_result = "11111001" else
+        o_flags(1) <= '1' when (((w_carryoadd = '1' and i_op = "000") or (not (w_carryosub) = '1' and i_op = "001")) or w_result = "00000111")  else
                      '0';
-        o_flags(0) <= ((not w_result(7)) and w_reg1(7) and w_reg2(7)) or (w_result(7) and (not w_reg1(7)) and (not w_reg2(7))) when i_op = "000" else '0';
+        o_flags(0) <= ((not w_result(7)) and w_reg1(7) and w_reg2(7)) or (w_result(7) and (not w_reg1(7)) and (not w_reg2(7)));
       
 end Behavioral;
