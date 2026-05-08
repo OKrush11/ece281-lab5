@@ -114,7 +114,7 @@ end component button_debounce;
 signal w_i_clock,w_o_clock, w_reset, w_adv,w_btnc: std_logic;
 signal w_cycle_out, w_flags, w_D0, w_D1, w_D2, w_D3, w_anode, w_disp_in: std_logic_vector(3 downto 0);
 signal w_op_in: std_logic_vector(2 downto 0);
-signal w_disp_out: std_logic_vector(7 downto 0);
+signal w_disp_out, w_checksign: std_logic_vector(6 downto 0);
 signal w_reg_in, w_reg1_out, w_reg2_out, w_ALU_out, w_mux_out: std_logic_vector(7 downto 0);
 
 begin
@@ -175,11 +175,14 @@ TDM : TDM4
  display : sevenseg_decoder 
     port map(
            i_hex => w_disp_in,
-           o_seg_n => seg
+           o_seg_n => w_checksign
            );
            
 	-- CONCURRENT STATEMENTS ----------------------------
-	 w_D3(3 downto 1) <= "000";
+	w_D3(3 downto 1) <= "000";
+	
+	
+	
 	--register logic--
 	registers : process(w_i_clock)
 	begin
@@ -194,13 +197,18 @@ TDM : TDM4
 	elsif (w_cycle_out = "0100") then               
 	   w_reg2_out <= w_reg_in;
 	   w_mux_out <= w_reg2_out;
-	 elsif (w_cycle_out = "1000") then
+	 elsif (w_cycle_out = "1000") then	            
 	      w_mux_out <= w_ALU_out;
+	      led(15 downto 12) <= w_flags;
 	 end if;
 	 end if;
 	 end process registers;  
-	
-	
+	 
+	 
+	--blank disp 4
+	seg <= "0111111" when (w_anode = "0111" and w_D3(0) = '1') else
+           "1111111" when (w_anode = "0111" and w_D3(0) = '0') else 
+            w_checksign;
 	
     w_reset	<= btnU;
     w_i_clock <= clk;
@@ -209,6 +217,6 @@ TDM : TDM4
 	an(3 downto 0) <= w_anode;
 	w_reg_in <= sw(7 downto 0);
 	led(3 downto 0) <= w_cycle_out;
-	led(15 downto 12) <= w_flags;
+
 	
 end top_basys3_arch;
