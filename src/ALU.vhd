@@ -98,7 +98,7 @@ begin
       
         o_flags(3) <= '1' when w_result(7) = '1' else '0';
         O_flags(2) <= '1' when w_result = "00000000" else '0';
-        o_flags(1) <= '1' when ((w_carryoadd = '1' and i_op = "000") or (not (w_carryosub) = '1' and i_op = "001")) or w_result = "00000111" else
+        o_flags(1) <= '1' when ((w_carryoadd = '1' and i_op = "000") or (not (w_carryosub) = '1' and i_op = "001")) or w_result = "00000111" or w_result = "11111001" else
                        '0';
         o_flags(0) <= ((not w_result(7)) and w_reg1(7) and w_reg2(7)) or (w_result(7) and (not w_reg1(7)) and (not w_reg2(7))) when i_op = "000" else '0';
       
