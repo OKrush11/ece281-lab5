@@ -52,8 +52,9 @@ component ripple_adder is
         end component ripple_adder;
         
         
-        signal w_carryi, w_carryosub,w_carryoadd, w_zero_flag, w_overflow_flag, w_carry_flag, w_negative_flag: std_logic; 
-        signal w_reg1, w_reg2,w_inverse_reg2, w_addres, w_subres, w_andres, w_orres, w_result: std_logic_vector(7 downto 0);
+        signal w_carryi, w_carryosub, w_carryoadd: std_logic; 
+        signal w_flags : std_logic_vector(3 downto 0);
+        signal w_reg1, w_reg2, w_inverse_reg2, w_addres, w_subres, w_andres, w_orres, w_result: std_logic_vector(7 downto 0);
        
 
 begin
@@ -94,5 +95,12 @@ begin
         
                    
       o_result <= w_result;
+      
+        w_flags <= "1000" when w_result(7) = '1' else
+                   "0100" when w_result = "00000000" else
+                   "0001" when (w_carryosub = '1' or w_carryoadd = '1') else
+                   "0000";
+      o_flags <= w_flags;
+      
       
 end Behavioral;

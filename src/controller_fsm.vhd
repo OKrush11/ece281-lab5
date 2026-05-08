@@ -67,9 +67,10 @@ begin
                 when reg2  => w_current <= combo;
                 when combo => w_current <= clear; 
                 when others => w_current <= clear;
-            end case;
-           
+            end case;      
         end if;
+        
+        
 	end process state_register;
     
     
