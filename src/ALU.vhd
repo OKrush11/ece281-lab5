@@ -98,7 +98,7 @@ begin
       
         w_flags <= "1000" when w_result(7) = '1' else
                    "0100" when w_result = "00000000" else
-                   "0010" when (w_carryosub = '1' or w_carryoadd = '1') else
+                   "0010" when ((w_carryoadd = '1' and i_op = "000") or (w_carryosub = '1' and i_op = "001"))else
                    "0000";
       o_flags <= w_flags;
       
