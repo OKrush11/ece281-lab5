@@ -146,14 +146,14 @@ controller : controller_fsm
     port map(
          i_A => w_reg1_out,
          i_B => w_reg2_out,
-         i_op =>  w_op_in ,
-         o_result => w_ALU_out,
+         i_op =>  w_op_in,
+         o_result => w_ALU_out(7 downto 0),
          O_flags => w_flags
         );
         
   twos_fixer : twos_comp    
         port map(  
-            i_bin  => w_mux_out,
+            i_bin(7 downto 0)  => w_mux_out(7 downto 0),
             o_sign => w_D3(0),
             o_hund => w_D2,
             o_tens => w_D1,
@@ -196,9 +196,9 @@ TDM : TDM4
 	   w_mux_out <= w_reg_in;
 	elsif (w_cycle_out = "0100") then               
 	   w_reg2_out <= w_reg_in;
-	   w_mux_out <= w_reg2_out;
+	   w_mux_out <= w_reg_in;
 	 elsif (w_cycle_out = "1000") then	            
-	      w_mux_out <= w_ALU_out;	      
+	      w_mux_out(7 downto 0) <= w_ALU_out(7 downto 0);	      
 	 end if;
 	 end if;
 	 end process registers;  
@@ -206,7 +206,7 @@ TDM : TDM4
 	 
 	--blank disp 4
 	seg <= "0111111" when (w_anode = "0111" and w_D3(0) = '1') else
-           "1111111" when (w_anode = "0111" and w_D3(0) = '0') else 
+           "1111111" when (w_anode = "0111" and w_D3(0) = '0') or w_cycle_out = "0001" else 
             w_checksign;
     led(15 downto 12) <= w_flags when w_cycle_out = "1000" else
                          "0000";

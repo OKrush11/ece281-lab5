@@ -94,7 +94,7 @@ begin
   
         
                    
-      o_result <= w_result;
+        o_result <= w_result;
       
         o_flags(3) <= '1' when w_result(7) = '1' else '0';
         O_flags(2) <= '1' when w_result = "00000000" else '0';
