@@ -120,7 +120,7 @@ signal w_reg_in, w_reg1_out, w_reg2_out, w_ALU_out, w_mux_out: std_logic_vector(
 begin
 	-- PORT MAPS ----------------------------------------
 clkdiv_inst: clock_divider 		--instantiation of clock_divider to take 
-        generic map ( k_DIV => 100000) -- 4 Hz clock from 100 MHz
+        generic map ( k_DIV => 1) -- 4 Hz clock from 100 MHz
         port map (						  
             i_clk   => w_i_clock,
             i_reset => w_reset,
@@ -193,7 +193,7 @@ TDM : TDM4
 	   w_mux_out <= "00000000";
 	elsif (w_cycle_out = "0010") then
 	   w_reg1_out <= w_reg_in;
-	   w_mux_out <= w_reg1_out;
+	   w_mux_out <= w_reg_in;
 	elsif (w_cycle_out = "0100") then               
 	   w_reg2_out <= w_reg_in;
 	   w_mux_out <= w_reg2_out;
