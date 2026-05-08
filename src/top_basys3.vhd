@@ -198,8 +198,7 @@ TDM : TDM4
 	   w_reg2_out <= w_reg_in;
 	   w_mux_out <= w_reg2_out;
 	 elsif (w_cycle_out = "1000") then	            
-	      w_mux_out <= w_ALU_out;
-	      led(15 downto 12) <= w_flags;
+	      w_mux_out <= w_ALU_out;	      
 	 end if;
 	 end if;
 	 end process registers;  
@@ -209,7 +208,9 @@ TDM : TDM4
 	seg <= "0111111" when (w_anode = "0111" and w_D3(0) = '1') else
            "1111111" when (w_anode = "0111" and w_D3(0) = '0') else 
             w_checksign;
-	
+    led(15 downto 12) <= w_flags when w_cycle_out = "1000" else
+                         "0000";
+                         
     w_reset	<= btnU;
     w_i_clock <= clk;
     w_btnC <= btnC;
