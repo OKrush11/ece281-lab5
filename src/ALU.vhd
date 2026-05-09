@@ -65,7 +65,7 @@ begin
       adder : ripple_adder port map(
         A => i_A,
         B => w_addsub,
-        Cin => '0',
+        Cin => i_op(0),
         S => w_addres,
         Cout => w_carryo
         );
