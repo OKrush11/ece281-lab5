@@ -100,6 +100,6 @@ begin
         o_flags(3) <= '1' when w_result(7) = '1' else '0';
         O_flags(2) <= '1' when w_result = "00000000" else '0';
         o_flags(1) <= not(i_op(1)) and w_carryoadd;
-        o_flags(0) <= (not(i_A(7) xor i_op(0) xor i_b(7)) and (w_result(7) xor i_a(0)) and not(i_op(1)));
+        o_flags(0) <= (not(i_A(7) xor i_op(0) xor i_b(7)) and (w_result(7) xor i_a(7)) and not(i_op(1)));
       --(w_result(7) and (not w_reg1(7)) and (not w_reg2(7))); 
 end Behavioral;
