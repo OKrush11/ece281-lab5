@@ -52,54 +52,36 @@ component ripple_adder is
         end component ripple_adder;
         
         
-        signal w_carryi, w_carryosub, w_carryoadd, w_overflow: std_logic; 
+        signal w_carryi, w_carryo, w_overflow: std_logic; 
         signal w_flags : std_logic_vector(3 downto 0);
-        signal w_reg1, w_reg2, w_inverse_reg2, w_addres, w_subres, w_andres, w_orres, w_result: std_logic_vector(7 downto 0);
+        signal  w_inverse_reg2, w_addsub, w_addres, w_subres, w_andres, w_orres, w_result: std_logic_vector(7 downto 0);
        
 
 begin
-      
-      w_reg1 <= i_A;
-      w_reg2 <= i_B;
-      w_inverse_reg2 <= not(w_reg2);
+
+      w_addsub <= (not i_B) when i_op = "001" else i_b;
         
       
       adder : ripple_adder port map(
-        A => w_reg1,
-        B => w_reg2,
+        A => i_A,
+        B => w_addsub,
         Cin => '0',
         S => w_addres,
-        Cout => w_carryoadd
+        Cout => w_carryo
         );
+
         
-      subtractor : ripple_adder port map(
-        A => w_reg1,
-        B => w_inverse_reg2,
-        Cin => '1',
-        S => w_subres,
-        Cout => w_carryosub
-        );
-        
-        
-        w_andres <= w_reg1 AND w_reg2;
-	    w_orres <= w_reg1 or w_reg2;
-	      
-        
-      with i_op select
-       w_result <= w_addres when "000",
-                   w_subres when "001",     
-                   w_andres when "010",
-                   w_orres  when "011",        
-                  "00000000" when others;
-        
+o_result <= w_addres when i_op = "000" else
+            w_addres when i_op = "001" else
+            (i_a and i_b) when i_op = "010" else
+            (i_a or i_b) when i_op = "011" else w_addres;
       --with i_op select
         --w_overflow <= ((not w_result(7)) and w_reg1(7) and w_reg2(7)) or (w_result(7) and (not w_reg1(7)) and (not w_reg2(7))) when "000",
                    
-        o_result <= w_result;
       
         o_flags(3) <= '1' when w_result(7) = '1' else '0';
         O_flags(2) <= '1' when w_result = "00000000" else '0';
-        o_flags(1) <= not(i_op(1)) and (w_carryoadd or w_carryosub);
+        o_flags(1) <= not(i_op(1)) and (w_carryo);
         o_flags(0) <= (not(i_A(7) xor i_op(0) xor i_b(7)) and (w_result(7) xor i_a(7)) and not(i_op(1)));
       --(w_result(7) and (not w_reg1(7)) and (not w_reg2(7))); 
 end Behavioral;
